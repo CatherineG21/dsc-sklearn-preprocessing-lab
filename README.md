@@ -142,7 +142,7 @@ relevant_columns = [
 ]
 
 # Reassign X_train so that it only contains relevant columns
-None
+X_train = X_train.loc[:, relevant_columns]
 
 # Visually inspect X_train
 X_train
@@ -274,11 +274,11 @@ frontage_train = X_train[["LotFrontage"]]
 missing_indicator = MissingIndicator()
 
 # (3) Fit the transformer object on frontage_train
-None
+missing_indicator.fit(frontage_train)
 
 # (4) Transform frontage_train and assign the result
 # to frontage_missing_train
-frontage_missing_train = None
+frontage_missing_train = missing_indicator.transform(frontage_train)
 
 # Visually inspect frontage_missing_train
 frontage_missing_train
@@ -339,14 +339,14 @@ from sklearn.impute import SimpleImputer
 # need to extract the relevant data again
 
 # (2) Instantiate a SimpleImputer with strategy="median"
-imputer = None
+imputer = SimpleImputer(strategy="median")
 
 # (3) Fit the imputer on frontage_train
-None
+imputer.fit(frontage_train)
 
 # (4) Transform frontage_train using the imputer and
 # assign the result to frontage_imputed_train
-frontage_imputed_train = None
+frontage_imputed_train = imputer.transform(frontage_train)
 
 # Visually inspect frontage_imputed_train
 frontage_imputed_train
@@ -458,18 +458,18 @@ Let's start with transforming `Street`:
 # Replace None with appropriate code
 
 # (0) import OrdinalEncoder from sklearn.preprocessing
-None
+from sklearn.preprocessing import OrdinalEncoder
 
 # (1) Create a variable street_train that contains the
 # relevant column from X_train
 # (Use double brackets [[]] to get the appropriate shape)
-street_train = None
+street_train = X_train[["Street"]]
 
 # (2) Instantiate an OrdinalEncoder
-encoder_street = None
+encoder_street = OrdinalEncoder()
 
 # (3) Fit the encoder on street_train
-None
+encoder_street.fit(street_train)
 
 # Inspect the categories of the fitted encoder
 encoder_street.categories_[0]
@@ -489,7 +489,7 @@ Now let's transform `street_train` with the fitted encoder:
 
 # (4) Transform street_train using the encoder and
 # assign the result to street_encoded_train
-street_encoded_train = None
+street_encoded_train = encoder_street.transform(street_train)
 
 # Flatten for appropriate shape
 street_encoded_train = street_encoded_train.flatten()
@@ -507,7 +507,7 @@ Now let's replace the original `Street` column with the encoded version:
 # Replace None with appropriate code
 
 # (5) Replace value of Street
-X_train["Street"] = None
+X_train["Street"] = street_encoded_train
 
 # Visually inspect X_train
 X_train
@@ -531,10 +531,10 @@ Now, repeat the same process with `LotFrontage_Missing`:
 # from earlier, no additional step needed
 
 # (2) Instantiate an OrdinalEncoder for missing frontage
-encoder_frontage_missing = None
+encoder_frontage_missing = OrdinalEncoder()
 
 # (3) Fit the encoder on frontage_missing_train
-None
+encoder_frontage_missing.fit(frontage_missing_train)
 
 # Inspect the categories of the fitted encoder
 encoder_frontage_missing.categories_[0]
@@ -546,7 +546,7 @@ encoder_frontage_missing.categories_[0]
 
 # (4) Transform frontage_missing_train using the encoder and
 # assign the result to frontage_missing_encoded_train
-frontage_missing_encoded_train = None
+frontage_missing_encoded_train = encoder_frontage_missing.transform(frontage_missing_train)
 
 # Flatten for appropriate shape
 frontage_missing_encoded_train = frontage_missing_encoded_train.flatten()
@@ -560,7 +560,7 @@ frontage_missing_encoded_train
 # Replace None with appropriate code
 
 # (5) Replace value of LotFrontage_Missing
-X_train["LotFrontage_Missing"] = None
+X_train["LotFrontage_Missing"] = frontage_missing_encoded_train
 
 # Visually inspect X_train
 X_train
@@ -623,7 +623,7 @@ In the cells below, complete steps `(0)`-`(4)` of preprocessing the `FireplaceQu
 # Replace None with appropriate code
 
 # (0) import OneHotEncoder from sklearn.preprocessing
-None
+from sklearn.preprocessing import OneHotEnc
 
 # (1) Create a variable fireplace_qu_train
 # extracted from X_train
@@ -632,10 +632,10 @@ fireplace_qu_train = X_train[["FireplaceQu"]]
 
 # (2) Instantiate a OneHotEncoder with categories="auto",
 # sparse=False, and handle_unknown="ignore"
-ohe = None
+ohe = OneHotEncoder(categories="auto", sparse=False, handle_unknown="ignore")
 
 # (3) Fit the encoder on fireplace_qu_train
-None
+ohe.fit(fireplace_qu_train)
 
 # Inspect the categories of the fitted encoder
 ohe.categories_
@@ -647,7 +647,7 @@ ohe.categories_
 
 # (4) Transform fireplace_qu_train using the encoder and
 # assign the result to fireplace_qu_encoded_train
-fireplace_qu_encoded_train = None
+fireplace_qu_encoded_train = ohe.transform(fireplace_qu_train)
 
 # Visually inspect fireplace_qu_encoded_train
 fireplace_qu_encoded_train
